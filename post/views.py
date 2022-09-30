@@ -1,11 +1,10 @@
 from datetime import datetime
-
+import requests
 from django.conf import settings
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from post.models import Job, MyHistory, Email
-from django.core.mail import send_mail
 
 
 def set_main(request):
@@ -13,13 +12,13 @@ def set_main(request):
         name = request.POST['name']
         email = request.POST['email']
         message = request.POST['message']
+         
+        order = f'Dear Nursultan new message for you \nName: {name}\nEmail: {email}\nMessage: {message}\nДата отправки: {datetime.now()}'
+        base_url = f'https://api.telegram.org/bot5421110622:AAGTrih1SWDeaAEnn2S6erFwFu7Q1hPob5s/sendMessage?chat_id=-716220787&text={order}'
+        requests.get(base_url)
 
-        send_mail(
-            'thnurs27 Заявка',
-            f'Dear Nursultan new message for you \nName: {name}\nEmail: {email}\nMessage: {message}\nДата отправки: {datetime.now()}',
-            settings.EMAIL_HOST_USER,
-            ['normosbekov@gmail.com', ]
-        )
+        
+           
         redirect('home')
 
     job = Job.objects.all()
